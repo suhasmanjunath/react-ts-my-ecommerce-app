@@ -1,0 +1,39 @@
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { getRecommendations } from '../services/recommendationService';
+
+export interface Product {
+    id: number;
+    name: string;
+    description: string;
+    // Add other product properties as needed
+  }
+
+export const Home = () => {
+  const [recommendedProducts, setRecommendedProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      const recommendations = await getRecommendations();
+      setRecommendedProducts(recommendations);
+    }
+
+    fetchRecommendations();
+  }, [])
+
+  return (
+    <div>
+      <h1>Recommended Products</h1>
+      <div>
+        {recommendedProducts.map((product) => (
+          <div key={product.id}>
+            <Link to={`/product/${product.id}`}>
+              <h3>{product.name}</h3>
+              <p>{product.description}</p>
+            </Link>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
